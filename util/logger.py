@@ -16,7 +16,7 @@ except ImportError:
 class Logger(object):
     def __init__(self, log_dir):
         """Create a summary writer logging to log_dir."""
-        self.writer = tf.summary.FileWriter(log_dir)
+        self.writer = tf.summary.create_file_writer(log_dir)
 
     def scalar_summary(self, tag, value, step):
         """Log a scalar variable."""
@@ -73,20 +73,20 @@ class Logger(object):
         summary = tf.Summary(value=[tf.Summary.Value(tag=tag, histo=hist)])
         self.writer.add_summary(summary, step)
         self.writer.flush()
-        
+
 if __name__ == '__main__':
-    
+
     import model_rmppe as modellib
     import numpy as np
-    
+
     logger = Logger('./logs')
     img = np.zeros((10, 3, 100, 100), dtype = np.uint8)
-    
+
     print ('===========> loading model <===========')
     netmodel = modellib.get_model()
     for tag, value in netmodel.named_parameters():
-        print tag, value.data.cpu().numpy().shape
-    
+        print(tag, value.data.cpu().numpy().shape)
+
     print ('===========> logger <===========')
     step = 0
     # (1) Log the scalar values
